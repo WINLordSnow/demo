@@ -10,11 +10,15 @@ import java.util.Objects;
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     @Column(nullable = false)
     private String name;
 
-    public Role(Long id, String name) {
+    public Role(Integer id) {
+        this.id = id;
+    }
+
+    public Role(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -25,11 +29,11 @@ public class Role implements GrantedAuthority {
         this.name = role;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

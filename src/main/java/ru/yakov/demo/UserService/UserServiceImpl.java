@@ -17,9 +17,8 @@ public class UserServiceImpl implements UserService {
     private final UserConverter userConverter;
 
     @Override
-    public UserDto saveUser(UserDto userDto) {
-        User saveUser = userRepository.save(userConverter.fromUserDtoToUser(userDto));
-        return userConverter.fromUserToUserDto(saveUser);
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 
     @Override
@@ -28,30 +27,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findByLogin(String login) {
-        User user = userRepository.findByLogin(login);
-        if (user != null) {
-            return userConverter.fromUserToUserDto(user);
-        }
-        return null;
+    public User findByLogin(String login) {
+        return userRepository.findByLogin(login);
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        List<User> usersList = userRepository.findAll();
-        List<UserDto> usersDtoList = new ArrayList<>();
-        usersList.forEach(user -> usersDtoList.add(userConverter.fromUserToUserDto(user)));
-        return usersDtoList;
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override
-    public UserDto getUser(int id) {
-        return userConverter.fromUserToUserDto(userRepository.findById(id).orElse(null));
+    public User getUser(int id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void updateUser(UserDto user) {
-        userRepository.save(userConverter.fromUserDtoToUser(user));
+    public void updateUser(User user) {
+        userRepository.save(user);
     }
 
 

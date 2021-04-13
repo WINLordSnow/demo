@@ -14,7 +14,7 @@
     <input type="text" th:field="*{login}" id="login" placeholder="Name">
     <br/>
     <label for="password">Password</label>
-    <input type="text" th:field="*{password}" id="password" placeholder="Name">
+    <input type="text" th:field="*{password}" id="password" placeholder="Password">
     <br/>
     <label for="name">Name</label>
     <input type="text" th:field="*{name}" id="name" placeholder="Name">
@@ -25,7 +25,7 @@
     <th:block th:each="role : ${allRoles}">
         <label>
             <input type="checkbox" th:field="*{roles}"
-                   th:value="${role.name}"
+                   th:value="${role.id}"
                    th:text="${role.name}"/>
         </label>
     </th:block>

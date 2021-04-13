@@ -13,7 +13,7 @@ import java.util.Set;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Column(nullable = false, unique = true)
     private String login;
     private String password;
@@ -50,15 +50,19 @@ public class User implements UserDetails {
 
     }
 
+    public String fullName() {
+        return name + ' ' + lastName;
+    }
+
     public void setRoles(Role role) {
         roles.add(role);
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

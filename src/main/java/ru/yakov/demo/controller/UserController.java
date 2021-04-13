@@ -6,7 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import ru.yakov.demo.UserService.UserService;
-import ru.yakov.demo.dto.UserDto;
+import ru.yakov.demo.model.Role;
+import ru.yakov.demo.model.User;
+import ru.yakov.demo.repository.RoleRepository;
 
 import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
@@ -18,11 +20,13 @@ import java.util.Set;
 @RequestMapping("/")
 public class UserController {
     private final UserService userService;
-    //private final Set<Role> allRoles;
+    private final RoleRepository roleRepository;
+    private final Set<Role> allRoles;
 
-    public UserController(@Qualifier("userService") UserService userService) {
+    public UserController(@Qualifier("userService") UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
-      //  this.allRoles = allRoles;
+        this.roleRepository = roleRepository;
+        this.allRoles = new HashSet<>(roleRepository.findAll());
     }
 
 //    @RequestMapping(value = "login", method = RequestMethod.GET)
@@ -37,26 +41,25 @@ public class UserController {
 
     @GetMapping("/admin")
     public String listUsers(ModelMap model) {
-        List<UserDto> list = userService.getAllUsers();
-       // Set<Role> roles = userService.getAllRoles();
+        List<User> list = userService.getAllUsers();
         model.addAttribute("users", list);
-       // model.addAttribute("roles", roles);
+        model.addAttribute("roles", allRoles);
         return "admin";
     }
 
     @GetMapping("/updateUser/{id}")
     public String updateUserForm(@PathVariable("id") int id, ModelMap model) {
-        UserDto user = userService.getUser(id);
+        User user = userService.getUser(id);
         model.addAttribute("user", user);
-       // model.addAttribute("allRoles", allRoles);
+        model.addAttribute("allRoles", allRoles);
         return "updateUser";
     }
 
     @PostMapping("/updateUser")
-    public String updateUser(UserDto user) {
-        //Set<Role> temp = new HashSet<>();
-//        user.getRoles().forEach(role -> temp.add(userService.getRoleByName(role.getName())));
-//        user.setRoles(temp);
+    public String updateUser(User user) {
+        Set<Role> temp = new HashSet<>();
+        user.getRoles().forEach(role -> temp.add(roleRepository.findById(role.getId()).get()));
+        user.setRoles(temp);
         userService.updateUser(user);
         return "redirect:/admin";
     }
@@ -69,28 +72,28 @@ public class UserController {
 
     @RolesAllowed(value = "ROLE_ADMIN")
     @GetMapping("/addUser")
-    public String addUserForm(@ModelAttribute UserDto user, ModelMap model) {
-        //model.addAttribute("allRoles", allRoles);
+    public String addUserForm(@ModelAttribute User user, ModelMap model) {
+        model.addAttribute("allRoles", allRoles);
         model.addAttribute("user", user);
         return "addUser";
     }
 
     @RolesAllowed(value = "ROLE_ADMIN")
     @PostMapping("/addUser")
-    public String addUser(UserDto user) {
-//        Set<Role> temp = new HashSet<>();
-//        if (user.getRoles().isEmpty()) {
-//            user.addRole(new Role("USER"));
-//        }
-//        allRoles.stream().filter(role -> user.getRoles().contains(new Role(role.getName()))).forEach(temp::add);
-//        user.setRoles(temp);
+    public String addUser(User user) {
+        Set<Role> temp = new HashSet<>();
+        if (user.getRoles().isEmpty()) {
+            user.addRole(new Role(1));
+        }
+        user.getRoles().forEach(role -> temp.add(roleRepository.findById(role.getId()).get()));
+        user.setRoles(temp);
         userService.saveUser(user);
         return "redirect:/admin";
     }
 
     @GetMapping("/user")
-    public String showUser(/*Principal*/UserDto user, ModelMap modelMap) {
-        UserDto userBd = userService.findByLogin(user.getName());
+    public String showUser(Principal user, ModelMap modelMap) {
+        User userBd = userService.findByLogin(user.getName());
         modelMap.addAttribute("user", userBd);
         return "/user";
     }
