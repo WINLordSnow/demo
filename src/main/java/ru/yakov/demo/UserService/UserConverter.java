@@ -10,7 +10,7 @@ public class UserConverter {
     public User fromUserDtoToUser(UserDto userDto) {
         User user = new User();
         user.setId(userDto.getId());
-        user.setLogin(userDto.getLogin());
+        user.setEmail(userDto.getLogin());
         user.setName(userDto.getName());
         user.setLastName(userDto.getLastName());
         return user;
@@ -19,7 +19,7 @@ public class UserConverter {
     public UserDto fromUserToUserDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
-                .login(user.getLogin())
+                .login(user.getEmail())
                 .name(user.getName())
                 .lastName(user.getLastName())
                 .build();

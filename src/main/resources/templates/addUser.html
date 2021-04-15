@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Add user</title>
+    <link th:href="@{/webjars/bootstrap/4.6.0-1/css/bootstrap.min.css}" rel="stylesheet" >
 </head>
 <body>
 <div th:replace="header :: content"></div>
 <form action="#" th:action="@{/addUser}" th:object="${user}" method="post">
     <label for="login">Login</label>
-    <input id="login" type="text" th:field="*{login}" placeholder="Login">
+    <input id="login" type="text" th:field="*{email}" placeholder="Login">
     <label for="password">Password</label>
     <input id="password" type="text" th:field="*{password}" placeholder="Password">
     <label>Name</label>

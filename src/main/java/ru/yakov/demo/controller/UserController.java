@@ -29,19 +29,31 @@ public class UserController {
         this.allRoles = new HashSet<>(roleRepository.findAll());
     }
 
-//    @RequestMapping(value = "login", method = RequestMethod.GET)
+    //    @RequestMapping(value = "login", method = RequestMethod.GET)
 //    public String loginPage() {
 //        return "login";
 //    }
 
+//    @GetMapping("/modal1")
+//    public String startPage(Principal user, ModelMap modelMap) {
+//        User userBd = userService.findByLogin(user.getName());
+//        modelMap.addAttribute("currentUser", userBd);
+//        return "header";
+//    }
+
     @GetMapping
-    public String startPage() {
+    public String startPage(Principal user, ModelMap modelMap) {
+        User userBd = userService.findByLogin(user.getName());
+        modelMap.addAttribute("currentUser", userBd);
         return "header";
     }
 
     @GetMapping("/admin")
-    public String listUsers(ModelMap model) {
+    public String listUsers(User userUp, Principal user, ModelMap model) {
         List<User> list = userService.getAllUsers();
+        User userBd = userService.findByLogin(user.getName());
+        model.addAttribute("userUp", userUp);
+        model.addAttribute("currentUser", userBd);
         model.addAttribute("users", list);
         model.addAttribute("roles", allRoles);
         return "admin";
@@ -94,6 +106,7 @@ public class UserController {
     @GetMapping("/user")
     public String showUser(Principal user, ModelMap modelMap) {
         User userBd = userService.findByLogin(user.getName());
+        modelMap.addAttribute("currentUser", userBd);
         modelMap.addAttribute("user", userBd);
         return "/user";
     }

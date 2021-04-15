@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Update user</title>
+    <link th:href="@{/webjars/bootstrap/4.6.0-1/css/bootstrap.min.css}" rel="stylesheet" >
 </head>
 <body>
 <div th:replace="header :: content"></div>
@@ -11,7 +12,7 @@
     <input readonly type="number" th:field="*{id}" id="id" placeholder="ID">
     <br/>
     <label for="login">Login</label>
-    <input type="text" th:field="*{login}" id="login" placeholder="Name">
+    <input type="text" th:field="*{email}" id="login" placeholder="Name">
     <br/>
     <label for="password">Password</label>
     <input type="text" th:field="*{password}" id="password" placeholder="Password">
