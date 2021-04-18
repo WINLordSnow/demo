@@ -56,16 +56,7 @@
         </div>
         <!--            </div>-->
         <!--        </nav>-->
-        <script>
-            $('#admin').click(function () {
-                $('#user').removeClass('active');
-                $('#admin').addClass('active');
-            });
-            $('#user').click(function () {
-                $('#admin').removeClass('active');
-                $('#user').addClass('active');
-            });
-        </script>
+
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
@@ -114,14 +105,16 @@
                                 </div>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit"
-                                        th:attrappend="data-target=${user.id}">Edit
+                                <button type="button" class="btn btn-info" data-toggle="modal"
+
+                                   th:attr="data-target='#edit' + ${user.id}">Edit
                                 </button>
-                                <div class="modal fade text-center" th:attrappend="id=${user.id}" id="edit"
+<!--                                <div th:replace="modalUp :: content"></div>-->
+                                <div class="modal fade text-center" th:attr="id='edit' + ${user.id}"
                                      tabindex="-1"
                                      role="dialog"
                                      aria-labelledby="editTitle" aria-hidden="true">
-                                    <form action="#" th:action="@{/updateUser}" th:object="${userUp}" method="post">
+                                    <form action="#" th:action="@{/updateUser}" th:object="${user}" method="post">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content ">
                                                 <div class="modal-header">
@@ -135,7 +128,7 @@
                                                 <div class="modal-body text-center col-12 offset-3 col-md-6 offset-md-3">
                                                     <div class="form-group">
                                                         <label class="font-weight-bold" for="idEdit">ID</label>
-                                                        <input id="idEdit" class="form-control" th:field="*{id}"
+                                                        <input id="idEdit" class="form-control" th:field="${user.id}"
                                                                th:value="${user.id}"
                                                                th:placeholder="${user.getId()}"
                                                                readonly>

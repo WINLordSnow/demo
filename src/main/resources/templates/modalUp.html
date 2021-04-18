@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="content">
+<div class="modal fade text-center" th:attr="id='edit' + ${user1.id}"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="editTitle" aria-hidden="true">
+    <form action="#" th:action="@{/updateUser}" th:object="${user1}" method="post">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTitle">Delete user</h5>
+
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center col-12 offset-3 col-md-6 offset-md-3">
+                    <div class="form-group">
+                        <label class="font-weight-bold" for="idEdit">ID</label>
+                        <input id="idEdit" class="form-control" th:field="*{id}"
+                               readonly>
+                    </div>
+                    <div class="form-group text-center">
+                        <label class="font-weight-bold" for="firstNameEdit">First
+                            Name</label>
+                        <input id="firstNameEdit" class="form-control"
+                               th:field="*{name}">
+                    </div>
+                    <div class="form-group text-center">
+                        <label class="font-weight-bold" for="lastNameEdit">Last
+                            Name</label>
+                        <input id="lastNameEdit" class="form-control"
+                               th:field="*{lastName}">
+                    </div>
+                    <div class="form-group text-center">
+                        <label class="font-weight-bold"
+                               for="emailEdit">Email</label>
+                        <input id="emailEdit" class="form-control"
+                               th:field="*{email}">
+                    </div>
+                    <div class="form-group text-center">
+                        <label class="font-weight-bold" for="rolesEdit">Role</label>
+                        <select multiple class="form-control" id="rolesEdit"
+                                th:size="${roles.size()}" th:field="*{roles}">
+                            <th:block th:each="role : ${roles}">
+                                <option th:text="${role.name}" th:value="${role.id}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="submit" class="btn btn-primary">Edit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+</body>
+</html>

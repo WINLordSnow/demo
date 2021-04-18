@@ -56,16 +56,18 @@ public class UserController {
         model.addAttribute("currentUser", userBd);
         model.addAttribute("users", list);
         model.addAttribute("roles", allRoles);
+        model.addAttribute("user1", new User());
         return "admin";
     }
 
     @GetMapping("/updateUser/{id}")
     public String updateUserForm(@PathVariable("id") int id, ModelMap model) {
         User user = userService.getUser(id);
-        model.addAttribute("user", user);
+        model.addAttribute("user1", user);
         model.addAttribute("allRoles", allRoles);
-        return "updateUser";
+        return "admin";
     }
+
 
     @PostMapping("/updateUser")
     public String updateUser(User user) {
