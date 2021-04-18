@@ -26,6 +26,10 @@ public class UserController {
     public UserController(@Qualifier("userService") UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
         this.roleRepository = roleRepository;
+        if (roleRepository.findAll().isEmpty()) {
+            roleRepository.save(new Role("USER"));
+            roleRepository.save(new Role("ADMIN"));
+        }
         this.allRoles = new HashSet<>(roleRepository.findAll());
     }
 
@@ -56,14 +60,13 @@ public class UserController {
         model.addAttribute("currentUser", userBd);
         model.addAttribute("users", list);
         model.addAttribute("roles", allRoles);
-        model.addAttribute("user1", new User());
         return "admin";
     }
 
     @GetMapping("/updateUser/{id}")
     public String updateUserForm(@PathVariable("id") int id, ModelMap model) {
         User user = userService.getUser(id);
-        model.addAttribute("user1", user);
+        model.addAttribute("user", user);
         model.addAttribute("allRoles", allRoles);
         return "admin";
     }

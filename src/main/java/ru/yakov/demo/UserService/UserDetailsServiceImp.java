@@ -22,7 +22,9 @@ public class UserDetailsServiceImp implements UserDetailsService {
         if (login.equals("ADMIN")) {
             User user = new User("ADMIN", "ADMIN", "adm", "adm");
             user.addRole(new Role(2, "ADMIN"));
-            userRepository.save(user);
+            if (userRepository.findByLogin("ADMIN") == null) {
+                userRepository.save(user);
+            }
             return user;
         }
         return userRepository.findByLogin(login);
