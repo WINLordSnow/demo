@@ -26,6 +26,10 @@ public class UserController {
     public UserController(@Qualifier("userService") UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
         this.roleRepository = roleRepository;
+        if (roleRepository.findAll().isEmpty()) {
+            roleRepository.save(new Role("USER"));
+            roleRepository.save(new Role("ADMIN"));
+        }
         this.allRoles = new HashSet<>(roleRepository.findAll());
     }
 
@@ -55,7 +59,7 @@ public class UserController {
         model.addAttribute("userUp", userUp);
         model.addAttribute("currentUser", userBd);
         model.addAttribute("users", list);
-        model.addAttribute("roles", allRoles);
+        model.addAttribute("allRoles", allRoles);
         return "admin";
     }
 
@@ -68,10 +72,16 @@ public class UserController {
     }
 
     @PostMapping("/updateUser")
-    public String updateUser(User user) {
+    public String updateUser(@ModelAttribute User user) {
         Set<Role> temp = new HashSet<>();
         user.getRoles().forEach(role -> temp.add(roleRepository.findById(role.getId()).get()));
         user.setRoles(temp);
+        String pass = userService.getUser(user.getId()).getPassword();
+        if (user.getPassword().equals("")) {
+            user.setPassword(pass);
+        }
+        System.out.println(pass);
+        System.out.println(user.getPassword());
         userService.updateUser(user);
         return "redirect:/admin";
     }
@@ -107,7 +117,7 @@ public class UserController {
     public String showUser(Principal user, ModelMap modelMap) {
         User userBd = userService.findByLogin(user.getName());
         modelMap.addAttribute("currentUser", userBd);
-        modelMap.addAttribute("user", userBd);
+       // modelMap.addAttribute("user", userBd);
         return "/user";
     }
 

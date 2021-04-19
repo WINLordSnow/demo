@@ -5,11 +5,6 @@
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-<!--    <link th:href="@{/webjars/bootstrap/4.6.0-1/css/bootstrap.min.css}" rel="stylesheet">-->
-<!--&lt;!&ndash;    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>&ndash;&gt;-->
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
@@ -18,114 +13,19 @@
 
 </head>
 <body>
-<!-- JavaScript Bundle with Popper -->
-<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>-->
-<!--<script src="webjars/popper.js/1.16.0/popper.min.js"></script>-->
-<!--<script src="webjars/bootstrap/4.6.0-1/js/bootstrap.min.js"></script>-->
-
-<!--<script>-->
-<!--    // $(function () {-->
-<!--    //     $('[data-toggle="tooltip"]').tooltip()-->
-<!--    // })-->
-<!--    jQuery.noConflict();-->
-<!--    $('#exampleModalLong').modal('show');-->
-<!--    // $('#exampleModalLong').on('shown.bs.modal', function () {-->
-<!--    //     $('#exampleModalLong').focus()-->
-<!--    // })-->
-<!--</script>-->
 <div th:fragment="content">
-        <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-2">
-            <!--        <a class="navbar-brand" href="#">Carousel</a>-->
-            <!--        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">-->
-            <!--            <span class="navbar-toggler-icon"></span>-->
-            <!--        </button>-->
-                <ul class="navbar-nav mr-auto">
-                    <li class="text-white nav-item">
-                        <!--                    <p class="nav-list" th:text="${user.name}"></p>-->
-                            <p class="d-inline"><strong th:text="${currentUser.getEmail()}"></strong></p>
-                            <p class="d-inline">with roles:</p>
-                            <div class="d-inline" th:each="role : ${currentUser.getRoles()}">
-                                <p class="d-inline" th:text="${role}"></p>
-                            </div>
-                    </li>
-                </ul>
-                <!--            <form class="form-inline mt-2 mt-md-0">-->
-                <a class="text-muted my-2 my-sm-0" href="/logout">Logout</a>
-                <!--            </form>-->
-        </nav>
-
-    <div class="container-">
-        <div class="row">
-            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                <div class="sidebar-sticky">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-outline-primary active" href="/admin">
-                                <span data-feather="home"></span>
-                                Admin
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-outline-primary" href="/user" >
-                                <span data-feather="file"></span>
-                                User
-                            </a>
-                        </li>
-                    </ul>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-2">
+        <ul class="navbar-nav mr-auto">
+            <li class="text-white nav-item">
+                <p class="d-inline"><strong th:text="${currentUser.getEmail()}"></strong></p>
+                <p class="d-inline">with roles:</p>
+                <div class="d-inline" th:each="role : ${currentUser.getRoles()}">
+                    <p class="d-inline" th:text="${role}"></p>
                 </div>
-            </nav>
-            <script>
-                $('.sidebar-sticky a').on('click', function ( ){
-                    $('a').removeClass('active');
-                    $(this).addClass('active');
-                });
-            </script>
-
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Admin panel</h1>
-
-                </div>
-
-
-                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalLong">userList</button>
-<!--                <h2>Section title</h2>-->
-                <div class="table-responsive">
-                    <table class="table table-striped ">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="user : ${users}">
-                            <td th:text="${user.id}"></td>
-                            <td th:text="${user.name}"></td>
-                            <td th:text="${user.lastName}"></td>
-                            <td th:text="${user.email}"></td>
-                            <td th:text="${user.getRoles}"></td>
-                            <td>
-                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalLong">Edit</button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger">Delete</button>
-                            </td>
-                        </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-            </main>
-        </div>
-    </div>
+            </li>
+        </ul>
+        <a class="text-muted my-2 my-sm-0" href="/logout">Logout</a>
+    </nav>
 </div>
-<button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalLong">Edit</button>
-
 </body>
 </html>
