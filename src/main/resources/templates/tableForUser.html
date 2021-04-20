@@ -22,22 +22,36 @@
                     <th>Role</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td th:text="${currentUser.id}"></td>
-                    <td th:text="${currentUser.name}"></td>
-                    <td th:text="${currentUser.lastName}"></td>
-                    <td th:text="${currentUser.email}"></td>
-                    <td>
-                        <div class="d-inline" th:each="role : ${currentUser.getRoles()}">
-                            <p class="d-inline" th:text="${role}"></p>
-                        </div>
-                    </td>
-                </tr>
+                <tbody id="tableUserBody">
                 </tbody>
             </table>
         </div>
     </div>
+
+<script>
+    fetch('/rest/user').then(
+        res => {
+            res.json().then(
+                data => {
+                    console.log(data);
+                    let temp = "";
+                    temp += "<tr id=\"" + data.id + "\">";
+                    temp += "<td>" + data.id + "</td>";
+                    temp += "<td>" + data.name + "</td>";
+                    temp += "<td>" + data.lastName + "</td>";
+                    temp += "<td>" + data.email + "</td>";
+                    temp += "<td>";
+                    let rolesStr = "";
+                    data.roles.forEach(r => {
+                        rolesStr += r.name + " ";
+                    })
+                    temp += rolesStr + "</td>" + "</tr>";
+                    document.getElementById("tableUserBody").innerHTML = temp;
+                }
+            )
+        }
+    )
+</script>
 </div>
 </body>
 </html>

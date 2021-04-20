@@ -17,15 +17,29 @@
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-2">
         <ul class="navbar-nav mr-auto">
             <li class="text-white nav-item">
-                <p class="d-inline"><strong th:text="${currentUser.getEmail()}"></strong></p>
-                <p class="d-inline">with roles:</p>
-                <div class="d-inline" th:each="role : ${currentUser.getRoles()}">
-                    <p class="d-inline" th:text="${role}"></p>
-                </div>
+                <strong><p class="d-inline" id="whoIsHere"></p></strong>
             </li>
         </ul>
         <a class="text-muted my-2 my-sm-0" href="/logout">Logout</a>
     </nav>
+<script>
+    fetch('/rest/user').then(
+        res => {
+            res.json().then(
+                data => {
+                    let temp = "";
+                    let rolesStr = "";
+                    data.roles.forEach(r => {
+                        rolesStr += r.name + " ";
+                    })
+                    temp = data.email + " with roles " + rolesStr;
+                    document.getElementById("whoIsHere").innerHTML = temp;
+                }
+            )
+        }
+    )
+
+</script>
 </div>
 </body>
 </html>

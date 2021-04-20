@@ -116,9 +116,9 @@ public class UserController {
     @GetMapping("/user")
     public String showUser(Principal user, ModelMap modelMap) {
         User userBd = userService.findByLogin(user.getName());
-        modelMap.addAttribute("currentUser", userBd);
+       // modelMap.addAttribute("currentUser", userBd);
        // modelMap.addAttribute("user", userBd);
-        return "/user";
+        return "user";
     }
 
 }

@@ -6,7 +6,9 @@
     <link th:href="@{/webjars/bootstrap/4.6.0-1/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
+<!--id="whoIsHere"-->
 <div th:replace="header :: content"></div>
+
 
 <div class="container-fluid no-gutters">
     <div class="row pr-0">
@@ -16,10 +18,13 @@
                 User
             </a>
         </div>
+        <h1 id="h"></h1>
         <main role="main" class="col-10 pt-3 pb-3 px-4 bg-light">
+<!--            id = "tableUserBody"-->
             <div th:replace="tableForUser :: content"></div>
         </main>
     </div>
+
 </div>
 </body>
 </html>
