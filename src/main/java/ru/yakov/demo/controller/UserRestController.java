@@ -1,8 +1,6 @@
 package ru.yakov.demo.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.yakov.demo.UserService.UserService;
 import ru.yakov.demo.model.Role;
 import ru.yakov.demo.model.User;
@@ -38,5 +36,12 @@ public class UserRestController {
     @GetMapping("/users")
     public List<User> getUsers() {
         return userService.getAllUsers();
+    }
+
+    @DeleteMapping("/delete")
+    public void deleteUser(@RequestBody String id) {
+        System.out.println("i`m here");
+        System.out.println(id);
+        userService.deleteUser(Integer.parseInt(id));
     }
 }

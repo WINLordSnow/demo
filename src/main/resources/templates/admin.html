@@ -331,15 +331,25 @@
                             rolesStr += r.name + " ";
                         })
                         temp += rolesStr + "</td>";
-                        temp += "<td><button id=\"editBtn"+u.id+"\"></button></td>" + "</tr>";
+                        temp += "<td><button onclick=\"f(this)\" id=\"editBtn"+u.id+"\">Edit</button></td>";
+                        temp += "<td><button onclick=\"f(this)\" id=\"deleteBtn"+u.id+"\">Delete</button></td>" + "</tr>";
                         // document.getElementById("editBtn").innerHTML = "Edit";
                     })
                     document.getElementById("usersTableBody").innerHTML = temp;
                     document.getElementById("editBtn7").innerHTML = "4555";
+
                 }
             )
         }
     )
+
+    function f(el) {
+        let idStr = el.id;
+        let id = idStr.slice(-1);
+        alert(id);
+        fetch('/rest/delete', {method: 'DELETE', body: id, headers: {'Content-Type': 'text/plain;charset=UTF-8'}});
+        document.getElementById(id).remove();
+    }
 </script>
 
     </body>
