@@ -28,6 +28,11 @@ public class UserRestController {
         this.allRoles = new HashSet<>(roleRepository.findAll());
     }
 
+    @GetMapping("/roles")
+    public Set<Role> getAllRoles() {
+        return allRoles;
+    }
+
     @GetMapping("/user")
     public User getUser(Principal user) {
         return userService.findByLogin(user.getName());
@@ -36,6 +41,11 @@ public class UserRestController {
     @GetMapping("/users")
     public List<User> getUsers() {
         return userService.getAllUsers();
+    }
+
+    @PostMapping("/edit")
+    public void editUser(@RequestBody User user) {
+        userService.updateUser(user);
     }
 
     @DeleteMapping("/delete")

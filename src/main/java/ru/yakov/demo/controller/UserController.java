@@ -105,7 +105,7 @@ public class UserController {
     public String addUser(User user) {
         Set<Role> temp = new HashSet<>();
         if (user.getRoles().isEmpty()) {
-            user.addRole(new Role(1));
+            user.setRoles(new Role(1));
         }
         user.getRoles().forEach(role -> temp.add(roleRepository.findById(role.getId()).get()));
         user.setRoles(temp);

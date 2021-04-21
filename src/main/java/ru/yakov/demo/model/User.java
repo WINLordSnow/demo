@@ -1,5 +1,6 @@
 package ru.yakov.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -93,7 +94,7 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public void addRole(Role role) {
+    public void setRole(Role role) {
         roles.add(role);
     }
 
