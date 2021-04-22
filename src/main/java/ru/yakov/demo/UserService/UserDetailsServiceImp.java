@@ -21,7 +21,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         if (login.equals("ADMIN")) {
             User user = new User("ADMIN", "ADMIN", "adm", "adm");
-            user.setRoles(new Role(2, "ADMIN"));
+            user.setRole(new Role(2, "ADMIN"));
             if (userRepository.findByLogin("ADMIN") == null) {
                 userRepository.save(user);
             }

@@ -33,18 +33,6 @@ public class UserController {
         this.allRoles = new HashSet<>(roleRepository.findAll());
     }
 
-    //    @RequestMapping(value = "login", method = RequestMethod.GET)
-//    public String loginPage() {
-//        return "login";
-//    }
-
-//    @GetMapping("/modal1")
-//    public String startPage(Principal user, ModelMap modelMap) {
-//        User userBd = userService.findByLogin(user.getName());
-//        modelMap.addAttribute("currentUser", userBd);
-//        return "header";
-//    }
-
     @GetMapping
     public String startPage(Principal user, ModelMap modelMap) {
         User userBd = userService.findByLogin(user.getName());
@@ -105,7 +93,7 @@ public class UserController {
     public String addUser(User user) {
         Set<Role> temp = new HashSet<>();
         if (user.getRoles().isEmpty()) {
-            user.setRoles(new Role(1));
+            user.setRole(new Role(1));
         }
         user.getRoles().forEach(role -> temp.add(roleRepository.findById(role.getId()).get()));
         user.setRoles(temp);

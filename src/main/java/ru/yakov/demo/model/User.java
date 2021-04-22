@@ -1,10 +1,12 @@
 package ru.yakov.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +20,7 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
     private String password;
+
     private String name;
     @Column(name = "last_name")
     private String lastName;
@@ -58,11 +61,7 @@ public class User implements UserDetails {
         return name + ' ' + lastName;
     }
 
-    public void setRoles(Role role) {
-        roles.add(role);
-    }
-
-    public Integer getId() {
+        public Integer getId() {
         return id;
     }
 
@@ -94,9 +93,15 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    @JsonSetter("roles")
+    public void setRoles(Role[] roles){
+        Arrays.stream(roles).forEach(this::setRole);
+    }
+
     public void setRole(Role role) {
         roles.add(role);
     }
+
 
     @Override
     public String toString() {

@@ -3,11 +3,9 @@ package ru.yakov.demo.UserService;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yakov.demo.dto.UserDto;
 import ru.yakov.demo.model.User;
 import ru.yakov.demo.repository.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -43,6 +41,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
+        if (user.getPassword().equals("")) {
+            String pass = getUser(user.getId()).getPassword();
+            user.setPassword(pass);
+        }
         userRepository.save(user);
     }
 

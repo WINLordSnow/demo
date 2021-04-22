@@ -72,46 +72,7 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="newUser" role="tabpanel" aria-labelledby="newUserBtn">
-                            <div class="row-cols-auto  bg-white no-gutters">
-                                <div class="col-12 bg-light border">
-                                    <h5 class="pl-3 pt-2 pb-2">Add new user</h5>
-                                </div>
-                                <div class="col-12 pl-3 pr-3 pt-3 pb-3 border">
-                                    <div class="text-center col-12 offset-3 col-md-6 offset-md-3">
-                                        <div class="form-group text-center">
-                                            <label class="font-weight-bold" for="firstNameNew">First
-                                                Name</label>
-                                            <input id="firstNameNew" class="form-control" placeholder="First name">
-                                        </div>
-                                        <div class="form-group text-center">
-                                            <label class="font-weight-bold" for="lastNameNew">Last
-                                                Name</label>
-                                            <input id="lastNameNew" class="form-control"
-                                                   placeholder="Last name">
-                                        </div>
-                                        <div class="form-group text-center">
-                                            <label class="font-weight-bold"
-                                                   for="emailNew">Email</label>
-                                            <input id="emailNew" class="form-control"
-                                                    placeholder="Email">
-                                        </div>
-                                        <div class="form-group text-center">
-                                            <label class="font-weight-bold"
-                                                   for="passwordNew">Password</label>
-                                            <input type="password" id="passwordNew" class="form-control"
-                                                    placeholder="Password">
-                                        </div>
-                                        <div class="form-group text-center">
-                                            <label class="font-weight-bold" for="rolesNew">Role</label>
-                                            <select multiple class="form-control" id="rolesNew">
-                                            </select>
-                                        </div>
-                                        <button id="addUserBtn" type="submit" class="btn btn-success btn-lg">Add new
-                                            user
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                            <div th:replace="newUser :: content"></div>
                         </div>
                     </div>
                 </div>
@@ -266,45 +227,41 @@
         res => {
             res.json().then(
                 data => {
-                    let temp = "";
                     allUsers = data;
-                    data.forEach(u => {
-                        temp += "<tr id=\"" + u.id + "\">";
-                        temp += "<td>" + u.id + "</td>";
-                        temp += "<td>" + u.name + "</td>";
-                        temp += "<td>" + u.lastName + "</td>";
-                        temp += "<td>" + u.email + "</td>";
-                        temp += "<td>";
-                        let rolesStr = "";
-                        u.roles.forEach(r => {
-                            rolesStr += r.name + " ";
-                        })
-                        temp += rolesStr + "</td>";
-                        temp += "<td><button class=\"btn btn-info\" onclick=\"fEdit(this)\" id=\"editBtn" + u.id + "\">Edit</button></td>";
-                        temp += "<td><button class=\"btn btn-danger\" onclick=\"fDel(this)\" id=\"deleteBtn" + u.id + "\">Delete</button></td>" + "</tr>";
-                    })
-                    document.getElementById("usersTableBody").innerHTML = temp;
-
+                    createTable(allUsers);
                 }
             )
         }
     )
 
-    function createNew() {
+    function createTable(data) {
         let temp = "";
-        console.log(allRoles)
-        document.getElementById("rolesNew").size = 2;
-        allRoles.forEach(r => {
-            temp += "<option>" + r.name + "</option>";
+        data.forEach(u => {
+            temp += "<tr id=\"" + u.id + "\">";
+            temp += "<td>" + u.id + "</td>";
+            temp += "<td>" + u.name + "</td>";
+            temp += "<td>" + u.lastName + "</td>";
+            temp += "<td>" + u.email + "</td>";
+            temp += "<td>";
+            let rolesStr = "";
+            u.roles.forEach(r => {
+                rolesStr += r.name + " ";
+            })
+            temp += rolesStr + "</td>";
+            temp += "<td><button class=\"btn btn-info\" onclick=\"fEdit(this)\" id=\"editBtn" + u.id + "\">Edit</button></td>";
+            temp += "<td><button class=\"btn btn-danger\" onclick=\"fDel(this)\" id=\"deleteBtn" + u.id + "\">Delete</button></td>" + "</tr>";
         })
-        document.getElementById("rolesNew").innerHTML = temp;
-        alert(5);
+        document.getElementById("usersTableBody").innerHTML = temp;
     }
 
-    createNew();
-
     $('#addUserBtn').click(function () {
-        let newUser = JSON.parse(JSON.stringify(allUsers[0]));
+        let newUser = {
+            name: "",
+            lastName: "",
+            email: "",
+            password: "",
+            roles: []
+        };
         newUser.name = document.getElementById("firstNameNew").value;
         newUser.lastName = document.getElementById("lastNameNew").value;
         newUser.email = document.getElementById("emailNew").value;
@@ -319,65 +276,101 @@
                 })
             }
         })
-        console.log(newUser)
-        //allUsers.push(newUser);
+        fetch('/rest/addNewUser', {
+            method: 'POST',
+            Accept: 'application/json, */*; q=0.01',
+            body: JSON.stringify(newUser),
+            headers: {'Content-Type': 'application/json'}
+        }).then(res1 => {
+            if (res1.ok) {
+                res1.json().then(u => {
+                    allUsers.push(u);
+                    createTable(allUsers);
+                })
+            }
+        })
     })
+
+    function getUserById(id) {
+        let t = null;
+        allUsers.forEach(u => {
+            if (u.id == id) {
+                t = u;
+            }
+        })
+        return t;
+    }
 
     $('#editUserBtn').click(function () {
         let id = document.getElementById("idEditModal").value;
         $('#editModal').modal('hide');
-        let edit;
-        allUsers.forEach(u => {
-            if (u.id == id) {
-                edit = u;
-                edit.name = document.getElementById("firstNameEditModal").value;
-                edit.lastName = document.getElementById("lastNameEditModal").value;
-                edit.email = document.getElementById("emailEditModal").value;
-                edit.password = document.getElementById("passwordEditModal").value;
-                edit.roles = [];
-                [].slice.call(document.getElementById("rolesEditModal")).forEach(op => {
-                    if (op.selected) {
-                        allRoles.forEach(r => {
-                            if (r.name == op.text) {
-                                edit.roles.push(r);
-                            }
-                        })
+        let edit = {
+            id: -1,
+            name: "",
+            lastName: "",
+            email: "",
+            password: "",
+            roles: []
+        };
+        edit.id = id;
+        edit.name =     document.getElementById("firstNameEditModal").value;
+        edit.lastName = document.getElementById("lastNameEditModal").value;
+        edit.email =    document.getElementById("emailEditModal").value;
+        edit.password = document.getElementById("passwordEditModal").value;
+        edit.roles = [];
+        [].slice.call(document.getElementById("rolesEditModal")).forEach(op => {
+            if (op.selected) {
+                allRoles.forEach(r => {
+                    if (r.name == op.text) {
+                        edit.roles.push(r);
                     }
                 })
-                //edit.roles = allRoles;
-                fetch('/rest/edit', {method: 'POST', body: edit, headers: {'Content-Type': 'application/json'}})
-                    .then(res => {
-                        if (!res.ok) {
-                            let temp = "";
-                            edit = u;
-                            temp += "<tr id=\"" + id + "\">";
-                            temp += "<td>" + id + "</td>";
-                            temp += "<td>" + edit.name + "</td>";
-                            temp += "<td>" + edit.lastName + "</td>";
-                            temp += "<td>" + edit.email + "</td>";
-                            temp += "<td>";
-                            let rolesStr = "";
-                            [].slice.call(document.getElementById("rolesEditModal")).forEach(op => {
-                                if (op.selected) {
-                                    rolesStr += op.text + " ";
-                                }
-                            })
-                            alert(rolesStr)
-                            temp += rolesStr + "</td>";
-                            temp += "<td><button class=\"btn btn-info\" onclick=\"fEdit(this)\" id=\"editBtn" + id + "\">Edit</button></td>";
-                            temp += "<td><button class=\"btn btn-danger\" onclick=\"fDel(this)\" id=\"deleteBtn" + id + "\">Delete</button></td>" + "</tr>";
-                            let tr = "#" + id;
-                            //alert(tr);
-                            $(tr).replaceWith(temp);
-                        }
-                    });
             }
         })
-        // for(let i = 0; i < allUsers.length; i++) {
-        //     if (allUsers[i].id == edit.id) {
-        //         allUsers[i] = edit;
-        //     }
-        // }
+        fetch('/rest/edit', {
+            method: 'POST',
+            body: JSON.stringify(edit),
+            headers: {'Content-Type': 'application/json'}
+        })
+            .then(res => {
+                if (res.ok) {
+                    /*
+
+   -------------->>>Что лучше: перезаписать всю таблицу или заменить одну строчку?<<<-----------------------
+
+                     */
+                    // let temp = "";
+                    // temp += "<tr id=\"" + id + "\">";
+                    // temp += "<td>" + id + "</td>";
+                    // temp += "<td>" + edit.name + "</td>";
+                    // temp += "<td>" + edit.lastName + "</td>";
+                    // temp += "<td>" + edit.email + "</td>";
+                    // temp += "<td>";
+                    // let rolesStr = "";
+                    // [].slice.call(document.getElementById("rolesEditModal")).forEach(op => {
+                    //     if (op.selected) {
+                    //         rolesStr += op.text + " ";
+                    //     }
+                    // })
+                    // temp += rolesStr + "</td>";
+                    // temp += "<td><button class=\"btn btn-info\" onclick=\"fEdit(this)\" id=\"editBtn" + id + "\">Edit</button></td>";
+                    // temp += "<td><button class=\"btn btn-danger\" onclick=\"fDel(this)\" id=\"deleteBtn" + id + "\">Delete</button></td>" + "</tr>";
+                    // let tr = "#" + id;
+                    // $(tr).replaceWith(temp);
+                    allUsers.forEach(u => {
+                        if (u.id == id) {
+                            u.name = edit.name;
+                            u.lastName = edit.lastName;
+                            u.email = edit.email;
+                            if (edit.password !== "") {
+                                u.password = edit.password;
+                            }
+                            u.roles = edit.roles;
+                        }
+                    })
+                    createTable(allUsers);
+                }
+            });
     })
 
     $('#delUserBtn').click(function () {
@@ -388,6 +381,11 @@
             .then(res => {
                 if (res.ok) {
                     document.getElementById(id).remove();
+                    let u = getUserById(id);
+                    let i = allUsers.indexOf(u);
+                    delete allUsers[i];
+                } else {
+                    alert("Удаление не удалось: " + res.status);
                 }
             });
     })
@@ -435,7 +433,6 @@
                     temp += "<option>" + r.name + "</option>";
                 })
                 document.getElementById("rolesDelModal").innerHTML = temp;
-                // $('#idDelModal').html(user1.id);
             }
         });
         $('#deleteModal').modal('show');

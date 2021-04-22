@@ -7,6 +7,7 @@ import ru.yakov.demo.model.User;
 import ru.yakov.demo.repository.RoleRepository;
 
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,12 +16,10 @@ import java.util.Set;
 @RequestMapping("/rest/")
 public class UserRestController {
     private final UserService userService;
-    private final RoleRepository roleRepository;
     private final Set<Role> allRoles;
 
     public UserRestController(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
-        this.roleRepository = roleRepository;
         if (roleRepository.findAll().isEmpty()) {
             roleRepository.save(new Role("USER"));
             roleRepository.save(new Role("ADMIN"));
@@ -33,6 +32,11 @@ public class UserRestController {
         return allRoles;
     }
 
+    @PostMapping("/addNewUser")
+    public User addNewUser(@RequestBody User user) {
+        return userService.saveUser(user);
+    }
+
     @GetMapping("/user")
     public User getUser(Principal user) {
         return userService.findByLogin(user.getName());
@@ -40,7 +44,9 @@ public class UserRestController {
 
     @GetMapping("/users")
     public List<User> getUsers() {
-        return userService.getAllUsers();
+        List<User> list = userService.getAllUsers();
+        list.sort(Comparator.comparingInt(User::getId));
+        return list;
     }
 
     @PostMapping("/edit")
