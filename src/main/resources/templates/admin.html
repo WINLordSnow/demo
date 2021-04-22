@@ -223,6 +223,19 @@
         }
     )
 
+    function isHaveUser(email, id) {
+        let result = false;
+        allUsers.forEach(u => {
+            if (u.email == email) {
+                if (u.id != id) {
+                    result = true;
+                    alert("Пользователь с таким email уже существует!!!");
+                }
+            }
+        })
+        return result;
+    }
+
     fetch('/rest/users').then(
         res => {
             res.json().then(
@@ -262,41 +275,42 @@
             password: "",
             roles: []
         };
-        newUser.name = document.getElementById("firstNameNew").value;
-        newUser.lastName = document.getElementById("lastNameNew").value;
         newUser.email = document.getElementById("emailNew").value;
-        newUser.password = document.getElementById("passwordNew").value;
-        newUser.roles = [];
-        [].slice.call(document.getElementById("rolesNew")).forEach(op => {
-            if (op.selected) {
-                allRoles.forEach(r => {
-                    if (r.name == op.text) {
-                        newUser.roles.push(r);
-                    }
-                })
-            }
-        })
-        fetch('/rest/addNewUser', {
-            method: 'POST',
-            Accept: 'application/json, */*; q=0.01',
-            body: JSON.stringify(newUser),
-            headers: {'Content-Type': 'application/json'}
-        }).then(res1 => {
-            if (res1.ok) {
-                res1.json().then(u => {
-                    allUsers.push(u);
-                    createTable(allUsers);
-                })
-                document.getElementById("firstNameNew").value = "";
-                document.getElementById("lastNameNew").value = "";
-                document.getElementById("emailNew").value = "";
-                document.getElementById("passwordNew").value = "";
-                document.getElementById("rolesNew").selectedIndex = -1;
-            } else {
-                alert("Не удалось удалить" + res1.status);
-            }
-        })
-
+        if (!isHaveUser(newUser.email, 0)) {
+            newUser.name = document.getElementById("firstNameNew").value;
+            newUser.lastName = document.getElementById("lastNameNew").value;
+            newUser.password = document.getElementById("passwordNew").value;
+            newUser.roles = [];
+            [].slice.call(document.getElementById("rolesNew")).forEach(op => {
+                if (op.selected) {
+                    allRoles.forEach(r => {
+                        if (r.name == op.text) {
+                            newUser.roles.push(r);
+                        }
+                    })
+                }
+            })
+            fetch('/rest/addNewUser', {
+                method: 'POST',
+                Accept: 'application/json, */*; q=0.01',
+                body: JSON.stringify(newUser),
+                headers: {'Content-Type': 'application/json'}
+            }).then(res1 => {
+                if (res1.ok) {
+                    res1.json().then(u => {
+                        allUsers.push(u);
+                        createTable(allUsers);
+                    })
+                    document.getElementById("firstNameNew").value = "";
+                    document.getElementById("lastNameNew").value = "";
+                    document.getElementById("emailNew").value = "";
+                    document.getElementById("passwordNew").value = "";
+                    document.getElementById("rolesNew").selectedIndex = -1;
+                } else {
+                    alert("Не удалось удалить" + res1.status);
+                }
+            })
+        }
     })
 
     function getUserById(id) {
@@ -310,8 +324,6 @@
     }
 
     $('#editUserBtn').click(function () {
-        let id = document.getElementById("idEditModal").value;
-        $('#editModal').modal('hide');
         let edit = {
             id: -1,
             name: "",
@@ -320,65 +332,68 @@
             password: "",
             roles: []
         };
-        edit.id = id;
-        edit.name =     document.getElementById("firstNameEditModal").value;
-        edit.lastName = document.getElementById("lastNameEditModal").value;
-        edit.email =    document.getElementById("emailEditModal").value;
-        edit.password = document.getElementById("passwordEditModal").value;
-        edit.roles = [];
-        [].slice.call(document.getElementById("rolesEditModal")).forEach(op => {
-            if (op.selected) {
-                allRoles.forEach(r => {
-                    if (r.name == op.text) {
-                        edit.roles.push(r);
-                    }
-                })
-            }
-        })
-        fetch('/rest/edit', {
-            method: 'PUT',
-            body: JSON.stringify(edit),
-            headers: {'Content-Type': 'application/json'}
-        })
-            .then(res => {
-                if (res.ok) {
-                    /*
-
-   -------------->>>Что лучше: перезаписать всю таблицу или заменить одну строчку?<<<-----------------------
-
-                     */
-                    // let temp = "";
-                    // temp += "<tr id=\"" + id + "\">";
-                    // temp += "<td>" + id + "</td>";
-                    // temp += "<td>" + edit.name + "</td>";
-                    // temp += "<td>" + edit.lastName + "</td>";
-                    // temp += "<td>" + edit.email + "</td>";
-                    // temp += "<td>";
-                    // let rolesStr = "";
-                    // [].slice.call(document.getElementById("rolesEditModal")).forEach(op => {
-                    //     if (op.selected) {
-                    //         rolesStr += op.text + " ";
-                    //     }
-                    // })
-                    // temp += rolesStr + "</td>";
-                    // temp += "<td><button class=\"btn btn-info\" onclick=\"fEdit(this)\" id=\"editBtn" + id + "\">Edit</button></td>";
-                    // temp += "<td><button class=\"btn btn-danger\" onclick=\"fDel(this)\" id=\"deleteBtn" + id + "\">Delete</button></td>" + "</tr>";
-                    // let tr = "#" + id;
-                    // $(tr).replaceWith(temp);
-                    allUsers.forEach(u => {
-                        if (u.id == id) {
-                            u.name = edit.name;
-                            u.lastName = edit.lastName;
-                            u.email = edit.email;
-                            if (edit.password !== "") {
-                                u.password = edit.password;
-                            }
-                            u.roles = edit.roles;
+        edit.email = document.getElementById("emailEditModal").value;
+        edit.id = document.getElementById("idEditModal").value;
+        if (!isHaveUser(edit.email, edit.id)) {
+            $('#editModal').modal('hide');
+            edit.name = document.getElementById("firstNameEditModal").value;
+            edit.lastName = document.getElementById("lastNameEditModal").value;
+            edit.password = document.getElementById("passwordEditModal").value;
+            edit.roles = [];
+            [].slice.call(document.getElementById("rolesEditModal")).forEach(op => {
+                if (op.selected) {
+                    allRoles.forEach(r => {
+                        if (r.name == op.text) {
+                            edit.roles.push(r);
                         }
                     })
-                    createTable(allUsers);
                 }
-            });
+            })
+            fetch('/rest/edit', {
+                method: 'PUT',
+                body: JSON.stringify(edit),
+                headers: {'Content-Type': 'application/json'}
+            })
+                .then(res => {
+                    if (res.ok) {
+                        /*
+
+       -------------->>>Что лучше: перезаписать всю таблицу или заменить одну строчку?<<<-----------------------
+
+                         */
+                        // let temp = "";
+                        // temp += "<tr id=\"" + edit.id + "\">";
+                        // temp += "<td>" + edit.id + "</td>";
+                        // temp += "<td>" + edit.name + "</td>";
+                        // temp += "<td>" + edit.lastName + "</td>";
+                        // temp += "<td>" + edit.email + "</td>";
+                        // temp += "<td>";
+                        // let rolesStr = "";
+                        // [].slice.call(document.getElementById("rolesEditModal")).forEach(op => {
+                        //     if (op.selected) {
+                        //         rolesStr += op.text + " ";
+                        //     }
+                        // })
+                        // temp += rolesStr + "</td>";
+                        // temp += "<td><button class=\"btn btn-info\" onclick=\"fEdit(this)\" id=\"editBtn" + edit.id + "\">Edit</button></td>";
+                        // temp += "<td><button class=\"btn btn-danger\" onclick=\"fDel(this)\" id=\"deleteBtn" + edit.id + "\">Delete</button></td>" + "</tr>";
+                        // let tr = "#" + edit.id;
+                        // $(tr).replaceWith(temp);
+                        allUsers.forEach(u => {
+                            if (u.id == edit.id) {
+                                u.name = edit.name;
+                                u.lastName = edit.lastName;
+                                u.email = edit.email;
+                                if (edit.password !== "") {
+                                    u.password = edit.password;
+                                }
+                                u.roles = edit.roles;
+                            }
+                        })
+                        createTable(allUsers);
+                    }
+                });
+        }
     })
 
     $('#delUserBtn').click(function () {
