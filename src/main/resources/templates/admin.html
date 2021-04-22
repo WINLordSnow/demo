@@ -287,8 +287,16 @@
                     allUsers.push(u);
                     createTable(allUsers);
                 })
+                document.getElementById("firstNameNew").value = "";
+                document.getElementById("lastNameNew").value = "";
+                document.getElementById("emailNew").value = "";
+                document.getElementById("passwordNew").value = "";
+                document.getElementById("rolesNew").selectedIndex = -1;
+            } else {
+                alert("Не удалось удалить" + res1.status);
             }
         })
+
     })
 
     function getUserById(id) {
@@ -328,7 +336,7 @@
             }
         })
         fetch('/rest/edit', {
-            method: 'POST',
+            method: 'PUT',
             body: JSON.stringify(edit),
             headers: {'Content-Type': 'application/json'}
         })

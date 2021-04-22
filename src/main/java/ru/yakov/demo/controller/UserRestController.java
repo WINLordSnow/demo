@@ -49,7 +49,7 @@ public class UserRestController {
         return list;
     }
 
-    @PostMapping("/edit")
+    @PutMapping("/edit")
     public void editUser(@RequestBody User user) {
         userService.updateUser(user);
     }
