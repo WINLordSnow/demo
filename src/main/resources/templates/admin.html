@@ -290,7 +290,7 @@
                     })
                 }
             })
-            fetch('/rest/addNewUser', {
+            fetch('/rest/users', {
                 method: 'POST',
                 Accept: 'application/json, */*; q=0.01',
                 body: JSON.stringify(newUser),
@@ -307,7 +307,7 @@
                     document.getElementById("passwordNew").value = "";
                     document.getElementById("rolesNew").selectedIndex = -1;
                 } else {
-                    alert("Не удалось удалить" + res1.status);
+                    alert("Не удалось добавить: " + res1.status);
                 }
             })
         }
@@ -349,7 +349,7 @@
                     })
                 }
             })
-            fetch('/rest/edit', {
+            fetch('/rest/users', {
                 method: 'PUT',
                 body: JSON.stringify(edit),
                 headers: {'Content-Type': 'application/json'}
@@ -400,7 +400,7 @@
         let id = document.getElementById("idDelModal").value;
         $('#deleteModal').modal('hide');
 
-        fetch('/rest/delete', {method: 'DELETE', body: id, headers: {'Content-Type': 'text/plain;charset=UTF-8'}})
+        fetch('/rest/users/' + id, {method: 'DELETE'})
             .then(res => {
                 if (res.ok) {
                     document.getElementById(id).remove();

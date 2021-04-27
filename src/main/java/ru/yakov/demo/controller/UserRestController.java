@@ -32,7 +32,7 @@ public class UserRestController {
         return allRoles;
     }
 
-    @PostMapping("/addNewUser")
+    @PostMapping("/users")
     public User addNewUser(@RequestBody User user) {
         return userService.saveUser(user);
     }
@@ -49,15 +49,13 @@ public class UserRestController {
         return list;
     }
 
-    @PutMapping("/edit")
+    @PutMapping("/users")
     public void editUser(@RequestBody User user) {
         userService.updateUser(user);
     }
 
-    @DeleteMapping("/delete")
-    public void deleteUser(@RequestBody String id) {
-        System.out.println("i`m here");
-        System.out.println(id);
-        userService.deleteUser(Integer.parseInt(id));
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable int id) {
+        userService.deleteUser(id);
     }
 }
