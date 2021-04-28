@@ -1,5 +1,6 @@
 package ru.yakov.demo.controller;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.yakov.demo.UserService.UserService;
 import ru.yakov.demo.model.Role;
@@ -34,6 +35,7 @@ public class UserRestController {
 
     @PostMapping("/users")
     public User addNewUser(@RequestBody User user) {
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return userService.saveUser(user);
     }
 
@@ -51,6 +53,7 @@ public class UserRestController {
 
     @PutMapping("/users")
     public void editUser(@RequestBody User user) {
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userService.updateUser(user);
     }
 

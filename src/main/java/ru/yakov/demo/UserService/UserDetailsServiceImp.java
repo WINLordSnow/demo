@@ -4,6 +4,8 @@ package ru.yakov.demo.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.yakov.demo.model.Role;
 import ru.yakov.demo.model.User;
@@ -19,8 +21,11 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        PasswordEncoder pe = new BCryptPasswordEncoder();
+        String pas = pe.encode("ADMIN");
+        System.out.println(pas);
         if (login.equals("ADMIN")) {
-            User user = new User("ADMIN", "ADMIN", "adm", "adm");
+            User user = new User("ADMIN", pas, "adm", "adm");
             user.setRole(new Role(2, "ADMIN"));
             if (userRepository.findByLogin("ADMIN") == null) {
                 userRepository.save(user);
